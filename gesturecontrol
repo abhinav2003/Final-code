@@ -1,0 +1,180 @@
+close all
+clear all
+clc
+
+% use computer to webcam to recognize gesture
+vid = webcam(1);
+pause(2);
+% take a snapshot
+img = snapshot(vid);
+imshow(img);
+clear vid
+
+% start the arduino object in MATLAB
+a = arduino();
+
+% seperate out the red green blue components in RGB image
+red = img(:,:,1);
+green = img(:,:,2);
+blue = img(:,:,3);
+
+% calculate the size of single channel image
+[m,n] = size(red);
+
+% count the number of red pixels in image
+RedCount = 0;
+for i = 1:m
+    for j = 1:n
+        if (red(i,j)>250)    % change condition
+            RedCount = RedCount + 1;
+        end
+    end
+end
+disp(RedCount);
+
+% start the conditions to move the robot and robotic arm
+% adjusting the threshold according to the light
+if (RedCount>2000 && RedCount<3400)
+    % robotic vehicle
+    disp('MOVE FORWARD AND PICK');
+    writePWMVoltage(a,'D3',1);
+    writePWMVoltage(a,'D4',0);
+    writePWMVoltage(a,'D5',1);
+    writePWMVoltage(a,'D6',0);
+    writePWMVoltage(a,'D7',1);
+    writePWMVoltage(a,'D8',0);
+    writePWMVoltage(a,'D9',1);
+    writePWMVoltage(a,'D10',0);
+    pause(0.7);
+    writePWMVoltage(a,'D3',0);
+    writePWMVoltage(a,'D4',0);
+    writePWMVoltage(a,'D5',0);
+    writePWMVoltage(a,'D6',0);
+    writePWMVoltage(a,'D7',0);
+    writePWMVoltage(a,'D8',0);
+    writePWMVoltage(a,'D9',0);
+    writePWMVoltage(a,'D10',0);
+    pause(2);
+    % robotic arm
+    writeDigitalPin(a,'D22',0);
+    writeDigitalPin(a,'D23',1);
+    pause(1.2);
+    writeDigitalPin(a,'D24',0);
+    writeDigitalPin(a,'D25',1);
+    pause(1);
+    writeDigitalPin(a,'D26',0);
+    writeDigitalPin(a,'D27',1);
+    pause(1);
+    writeDigitalPin(a,'D28',1);
+    writeDigitalPin(a,'D29',0);
+    pause(0.7);
+else if (RedCount>3400 && RedCount<5300)
+    % robotic vehicle    
+    disp('MOVE BACKWARD AND DROP');
+    writePWMVoltage(a,'D3',0);
+    writePWMVoltage(a,'D4',1);
+    writePWMVoltage(a,'D5',0);
+    writePWMVoltage(a,'D6',1);
+    writePWMVoltage(a,'D7',0);
+    writePWMVoltage(a,'D8',1);
+    writePWMVoltage(a,'D9',0);
+    writePWMVoltage(a,'D10',1);
+    pause(0.7);
+    writePWMVoltage(a,'D3',0);
+    writePWMVoltage(a,'D4',0);
+    writePWMVoltage(a,'D5',0);
+    writePWMVoltage(a,'D6',0);
+    writePWMVoltage(a,'D7',0);
+    writePWMVoltage(a,'D8',0);
+    writePWMVoltage(a,'D9',0);
+    writePWMVoltage(a,'D10',0);
+    pause(2);
+    % robotic arm
+    writeDigitalPin(a,'D30',1);
+    writeDigitalPin(a,'D31',0);
+    pause(1);
+    writeDigitalPin(a,'D22',1);
+    writeDigitalPin(a,'D23',0);
+    pause(1.2);
+    writeDigitalPin(a,'D24',1);
+    writeDigitalPin(a,'D25',0);
+    pause(1);
+    writeDigitalPin(a,'D26',1);
+    writeDigitalPin(a,'D27',0);
+    pause(1);
+    writeDigitalPin(a,'D28',0);
+    writeDigitalPin(a,'D29',1);
+    pause(0.7);
+else if (RedCount>5300 && RedCount<7800)
+    % robotic vehicle    
+    disp('MOVE LEFT AND PICK');
+    writePWMVoltage(a,'D3',0);
+    writePWMVoltage(a,'D4',0);
+    writePWMVoltage(a,'D5',0);
+    writePWMVoltage(a,'D6',0);
+    writePWMVoltage(a,'D7',1);
+    writePWMVoltage(a,'D8',0);
+    writePWMVoltage(a,'D9',1);
+    writePWMVoltage(a,'D10',0);
+    pause(0.7);
+    writePWMVoltage(a,'D3',0);
+    writePWMVoltage(a,'D4',0);
+    writePWMVoltage(a,'D5',0);
+    writePWMVoltage(a,'D6',0);
+    writePWMVoltage(a,'D7',0);
+    writePWMVoltage(a,'D8',0);
+    writePWMVoltage(a,'D9',0);
+    writePWMVoltage(a,'D10',0);
+    pause(2);
+    % robotic arm
+    writeDigitalPin(a,'D22',0);
+    writeDigitalPin(a,'D23',1);
+    pause(1.2);
+    writeDigitalPin(a,'D24',0);
+    writeDigitalPin(a,'D25',1);
+    pause(1);
+    writeDigitalPin(a,'D26',0);
+    writeDigitalPin(a,'D27',1);
+    pause(1);
+    writeDigitalPin(a,'D28',1);
+    writeDigitalPin(a,'D29',0);
+    pause(0.7);
+else if (RedCount>7800)
+    % robotic vehicle    
+    disp('MOVE RIGHT AND DROP');
+    writePWMVoltage(a,'D3',1);
+    writePWMVoltage(a,'D4',0);
+    writePWMVoltage(a,'D5',1);
+    writePWMVoltage(a,'D6',0);
+    writePWMVoltage(a,'D7',0);
+    writePWMVoltage(a,'D8',0);
+    writePWMVoltage(a,'D9',0);
+    writePWMVoltage(a,'D10',0);
+    pause(0.7);
+    writePWMVoltage(a,'D3',0);
+    writePWMVoltage(a,'D4',0);
+    writePWMVoltage(a,'D5',0);
+    writePWMVoltage(a,'D6',0);
+    writePWMVoltage(a,'D7',0);
+    writePWMVoltage(a,'D8',0);
+    writePWMVoltage(a,'D9',0);
+    writePWMVoltage(a,'D10',0);   
+    pause(2);
+    % robotic arm
+    writeDigitalPin(a,'D30',1);
+    writeDigitalPin(a,'D31',0);
+    pause(1);
+    writeDigitalPin(a,'D22',1);
+    writeDigitalPin(a,'D23',0);
+    pause(1.2);
+    writeDigitalPin(a,'D24',1);
+    writeDigitalPin(a,'D25',0);
+    pause(1);
+    writeDigitalPin(a,'D26',1);
+    writeDigitalPin(a,'D27',0);
+    pause(1);
+    writeDigitalPin(a,'D28',0);
+    writeDigitalPin(a,'D29',1);
+    pause(0.7);
+    end
+end
